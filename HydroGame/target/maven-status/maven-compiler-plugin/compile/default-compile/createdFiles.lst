@@ -1,0 +1,14 @@
+com\hydrogame\hibernate_util\HibernateUtil.class
+com\hydrogame\database\Game.class
+com\hydrogame\feature_admin\AddGame_Service.class
+com\hydrogame\database\User.class
+com\hydrogame\security_service\DecryptionService.class
+com\hydrogame\feature_admin\EditGame_Service.class
+com\hydrogame\user_service\RegisterService.class
+com\hydrogame\main\SystemInfo.class
+module-info.class
+com\hydrogame\security_service\EncryptionService.class
+com\hydrogame\main\App.class
+com\hydrogame\user_service\LoginService.class
+com\hydrogame\database\Genre.class
+com\hydrogame\feature_all\Search.class
