@@ -18,6 +18,7 @@ module com.hydrogame {
     
     // QUAN TRỌNG: Cho phép Hibernate truy cập vào các Entity bằng Reflection
     opens com.hydrogame.database to org.hibernate.orm.core;
+    opens com.hydrogame.main to javafx.fxml;
     
     // Cho phép JavaFX truy cập vào MainApp để khởi chạy
     exports com.hydrogame.main;

@@ -3,21 +3,11 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Other/File.java to edit this template
  */
 package com.hydrogame.database;
-import java.math.BigDecimal;
+import javax.persistence.*;
 import java.time.LocalDate;
-import java.util.HashSet;
+import java.math.BigDecimal;
 import java.util.Set;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
-import javax.persistence.Table;
+import java.util.HashSet;
 
 @Entity
 @Table(name = "game")
@@ -95,7 +85,7 @@ public class Game {
     public String getImgUrl() { return imgUrl; }
     public void setImgUrl(String imgUrl) { this.imgUrl = imgUrl; }
 
-    //to string
+    //tostring
     @Override
     public String toString() {
         return "Game{" +
