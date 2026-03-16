@@ -20,7 +20,7 @@
 
 <HBox xmlns="http://javafx.com/javafx/11"
       xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="com.hydrogame.LoginController"
+      fx:controller="com.hydrogame.controller.LoginController"
       prefWidth="860" prefHeight="620"
       style="-fx-background-color: #0A1220;">
 
@@ -56,7 +56,7 @@
 
                 <VBox spacing="4">
                     <HBox spacing="0" alignment="CENTER_LEFT">
-                        <Label text="HyDro " styleClass="brand-title"/>
+                        <Label text="Hydro" styleClass="brand-title"/>
                         <Label text="Games" styleClass="brand-title-accent"/>
                     </HBox>
                     <Label text="MANAGEMENT SYSTEM" styleClass="brand-sub"/>
@@ -85,7 +85,7 @@
                 </VBox>
 
                 <Pane VBox.vgrow="ALWAYS"/>
-                <Label text="v1.0  ·  HyDro Games 2026" styleClass="version-text"/>
+                <Label text="v1.0  ·  HydroGames 2026" styleClass="version-text"/>
             </VBox>
         </StackPane>
     </HBox>
@@ -99,7 +99,7 @@
 
             <VBox spacing="6">
                 <Label text="Sign In" styleClass="form-title"/>
-                <Label text="Welcome back to HyDro Games" styleClass="form-sub"/>
+                <Label text="Welcome back to HydroGames" styleClass="form-sub"/>
                 <Rectangle width="40" height="3" fill="#6366F1" arcWidth="2" arcHeight="2"/>
             </VBox>
 
