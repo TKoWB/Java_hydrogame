@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.Hyperlink?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.ToggleButton?>
+<?import javafx.scene.control.ToggleGroup?>
+<?import javafx.scene.shape.Rectangle?>
+<?import javafx.scene.shape.Circle?>
+<?import javafx.geometry.Insets?>
+<?import java.lang.String?>
+
+<HBox xmlns="http://javafx.com/javafx/11"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.hydrogame.LoginController"
+      prefWidth="860" prefHeight="620"
+      style="-fx-background-color: #0A1220;">
+
+    <stylesheets>
+        <String fx:value="/css/styles.css"/>
+    </stylesheets>
+
+    <fx:define>
+        <ToggleGroup fx:id="roleGroup"/>
+    </fx:define>
+
+    <HBox prefWidth="220" prefHeight="620">
+        <Pane styleClass="left-accent" prefHeight="620"/>
+
+        <StackPane HBox.hgrow="ALWAYS" prefHeight="620"
+                   style="-fx-background-color: #0D1B2A;">
+
+            <Circle centerX="108" centerY="210" radius="165"
+                    fill="transparent" stroke="#6366F1" strokeWidth="46" opacity="0.04"/>
+            <Circle centerX="108" centerY="210" radius="105"
+                    fill="transparent" stroke="#6366F1" strokeWidth="30" opacity="0.05"/>
+            <Circle centerX="108" centerY="210" radius="52"
+                    fill="transparent" stroke="#818CF8" strokeWidth="15" opacity="0.06"/>
+
+            <Circle centerX="196" centerY="46"  radius="5"   fill="#818CF8" opacity="0.5"/>
+            <Circle centerX="181" centerY="58"  radius="3"   fill="#6366F1" opacity="0.38"/>
+            <Circle centerX="38"  centerY="500" radius="4"   fill="#6366F1" opacity="0.42"/>
+            <Circle centerX="52"  centerY="514" radius="2.5" fill="#818CF8" opacity="0.3"/>
+
+            <VBox alignment="TOP_LEFT" spacing="22"
+                  prefWidth="217" prefHeight="620">
+                <padding><Insets top="50" right="28" bottom="50" left="28"/></padding>
+
+                <VBox spacing="4">
+                    <HBox spacing="0" alignment="CENTER_LEFT">
+                        <Label text="HyDro " styleClass="brand-title"/>
+                        <Label text="Games" styleClass="brand-title-accent"/>
+                    </HBox>
+                    <Label text="MANAGEMENT SYSTEM" styleClass="brand-sub"/>
+                </VBox>
+
+                <Label text="The complete platform for managing your game catalog, sales, and user access."
+                       styleClass="left-desc" wrapText="true" prefWidth="161"/>
+
+                <VBox spacing="14">
+                    <HBox spacing="10" alignment="CENTER_LEFT">
+                        <Rectangle width="3" height="16" fill="#6366F1" arcWidth="2" arcHeight="2"/>
+                        <Label text="Role-based access control" styleClass="left-feat"/>
+                    </HBox>
+                    <HBox spacing="10" alignment="CENTER_LEFT">
+                        <Rectangle width="3" height="16" fill="#818CF8" arcWidth="2" arcHeight="2"/>
+                        <Label text="Full game catalog management" styleClass="left-feat"/>
+                    </HBox>
+                    <HBox spacing="10" alignment="CENTER_LEFT">
+                        <Rectangle width="3" height="16" fill="#6366F1" arcWidth="2" arcHeight="2"/>
+                        <Label text="Sales &amp; analytics dashboard" styleClass="left-feat"/>
+                    </HBox>
+                    <HBox spacing="10" alignment="CENTER_LEFT">
+                        <Rectangle width="3" height="16" fill="#818CF8" arcWidth="2" arcHeight="2"/>
+                        <Label text="Secure encrypted storage" styleClass="left-feat"/>
+                    </HBox>
+                </VBox>
+
+                <Pane VBox.vgrow="ALWAYS"/>
+                <Label text="v1.0  ·  HyDro Games 2026" styleClass="version-text"/>
+            </VBox>
+        </StackPane>
+    </HBox>
+
+    <VBox HBox.hgrow="ALWAYS" styleClass="right-panel" prefHeight="620">
+        <padding><Insets top="0" right="64" bottom="0" left="64"/></padding>
+
+        <Pane VBox.vgrow="ALWAYS"/>
+
+        <VBox fx:id="formContainer" spacing="16" maxWidth="440">
+
+            <VBox spacing="6">
+                <Label text="Sign In" styleClass="form-title"/>
+                <Label text="Welcome back to HyDro Games" styleClass="form-sub"/>
+                <Rectangle width="40" height="3" fill="#6366F1" arcWidth="2" arcHeight="2"/>
+            </VBox>
+
+            <VBox spacing="6">
+                <Label text="ROLE" styleClass="field-label"/>
+                <HBox styleClass="toggle-wrap" spacing="0">
+                    <ToggleButton fx:id="userToggle" text="User"
+                                  toggleGroup="$roleGroup" selected="true"
+                                  styleClass="role-btn role-btn-user"
+                                  HBox.hgrow="ALWAYS" maxWidth="Infinity"
+                                  prefHeight="40"/>
+                    <ToggleButton fx:id="adminToggle" text="Admin"
+                                  toggleGroup="$roleGroup"
+                                  styleClass="role-btn role-btn-admin"
+                                  HBox.hgrow="ALWAYS" maxWidth="Infinity"
+                                  prefHeight="40"/>
+                </HBox>
+            </VBox>
+
+            <StackPane maxWidth="440" minHeight="34" maxHeight="34">
+                <Label fx:id="errorLabel" text="" visible="false"
+                       wrapText="false" maxWidth="440"
+                       styleClass="message-label msg-error"
+                       StackPane.alignment="CENTER_LEFT"/>
+            </StackPane>
+
+            <VBox spacing="6">
+                <Label text="EMAIL" styleClass="field-label"/>
+                <TextField fx:id="emailField" promptText="you@gmail.com"
+                           styleClass="input-field" maxWidth="440"/>
+            </VBox>
+
+            <VBox spacing="6">
+                <HBox alignment="CENTER_LEFT">
+                    <Label text="PASSWORD" styleClass="field-label"/>
+                    <Pane HBox.hgrow="ALWAYS"/>
+                    <Hyperlink text="Forgot password?" styleClass="link-muted"/>
+                </HBox>
+                <StackPane maxWidth="440">
+                    <PasswordField fx:id="passwordField" promptText="••••••••"
+                                   styleClass="input-field" maxWidth="440"/>
+                    <TextField fx:id="passwordVisible" promptText="••••••••"
+                               styleClass="input-field" visible="false" managed="false"
+                               maxWidth="440"/>
+                    <Button fx:id="eyeBtn" text="👁" onAction="#togglePasswordVisibility"
+                            styleClass="eye-btn" StackPane.alignment="CENTER_RIGHT"/>
+                </StackPane>
+            </VBox>
+
+            <CheckBox fx:id="rememberMeCheck" text="Remember me" styleClass="custom-check"/>
+
+            <Button fx:id="loginButton" text="Sign In" onAction="#handleLogin"
+                    styleClass="btn-primary" maxWidth="440" prefHeight="46"/>
+
+            <HBox alignment="CENTER" spacing="10">
+                <Separator HBox.hgrow="ALWAYS" styleClass="divider-line"/>
+                <Label text="or" styleClass="divider-text"/>
+                <Separator HBox.hgrow="ALWAYS" styleClass="divider-line"/>
+            </HBox>
+
+            <HBox alignment="CENTER" spacing="5">
+                <Label text="Don't have an account?" styleClass="link-prompt"/>
+                <Hyperlink text="Create one →" onAction="#goToRegister" styleClass="link-action"/>
+            </HBox>
+
+        </VBox>
+
+        <Pane VBox.vgrow="ALWAYS"/>
+    </VBox>
+</HBox>

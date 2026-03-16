@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Hyperlink?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.ToggleButton?>
+<?import javafx.scene.control.ToggleGroup?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.shape.Rectangle?>
+<?import javafx.scene.shape.Circle?>
+<?import javafx.geometry.Insets?>
+<?import java.lang.String?>
+
+<HBox xmlns="http://javafx.com/javafx/11"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.hydrogame.RegisterController"
+      prefWidth="860" prefHeight="620"
+      style="-fx-background-color: #0A1220;">
+
+    <stylesheets>
+        <String fx:value="/css/styles.css"/>
+    </stylesheets>
+
+    <fx:define>
+        <ToggleGroup fx:id="roleGroup"/>
+    </fx:define>
+
+    <HBox prefWidth="220" prefHeight="620">
+        <Pane styleClass="left-accent" prefHeight="620"/>
+
+        <StackPane HBox.hgrow="ALWAYS" prefHeight="620"
+                   style="-fx-background-color: #0D1B2A;">
+
+            <Circle centerX="108" centerY="220" radius="168"
+                    fill="transparent" stroke="#818CF8" strokeWidth="47" opacity="0.04"/>
+            <Circle centerX="108" centerY="220" radius="107"
+                    fill="transparent" stroke="#818CF8" strokeWidth="30" opacity="0.05"/>
+            <Circle centerX="108" centerY="220" radius="53"
+                    fill="transparent" stroke="#6366F1" strokeWidth="15" opacity="0.06"/>
+
+            <Circle centerX="196" centerY="46"  radius="5"   fill="#818CF8" opacity="0.5"/>
+            <Circle centerX="181" centerY="58"  radius="3"   fill="#6366F1" opacity="0.38"/>
+            <Circle centerX="38"  centerY="510" radius="4"   fill="#6366F1" opacity="0.42"/>
+            <Circle centerX="52"  centerY="524" radius="2.5" fill="#818CF8" opacity="0.3"/>
+
+            <VBox alignment="TOP_LEFT" spacing="22"
+                  prefWidth="217" prefHeight="620">
+                <padding><Insets top="50" right="28" bottom="50" left="28"/></padding>
+
+                <VBox spacing="4">
+                    <HBox spacing="0" alignment="CENTER_LEFT">
+                        <Label text="HyDro " styleClass="brand-title"/>
+                        <Label text="Games" styleClass="brand-title-accent"/>
+                    </HBox>
+                    <Label text="MANAGEMENT SYSTEM" styleClass="brand-sub"/>
+                </VBox>
+
+                <Label text="Create your account and join the HyDro Games ecosystem today."
+                       styleClass="left-desc" wrapText="true" prefWidth="161"/>
+
+                <VBox spacing="14">
+                    <HBox spacing="10" alignment="CENTER_LEFT">
+                        <Rectangle width="3" height="16" fill="#818CF8" arcWidth="2" arcHeight="2"/>
+                        <Label text="Instant account activation" styleClass="left-feat"/>
+                    </HBox>
+                    <HBox spacing="10" alignment="CENTER_LEFT">
+                        <Rectangle width="3" height="16" fill="#6366F1" arcWidth="2" arcHeight="2"/>
+                        <Label text="Exclusive game catalog access" styleClass="left-feat"/>
+                    </HBox>
+                    <HBox spacing="10" alignment="CENTER_LEFT">
+                        <Rectangle width="3" height="16" fill="#818CF8" arcWidth="2" arcHeight="2"/>
+                        <Label text="Secure &amp; private by default" styleClass="left-feat"/>
+                    </HBox>
+                    <HBox spacing="10" alignment="CENTER_LEFT">
+                        <Rectangle width="3" height="16" fill="#6366F1" arcWidth="2" arcHeight="2"/>
+                        <Label text="Free forever, no hidden fees" styleClass="left-feat"/>
+                    </HBox>
+                </VBox>
+
+                <Pane VBox.vgrow="ALWAYS"/>
+                <Label text="v1.0  ·  HyDro Games 2026" styleClass="version-text"/>
+            </VBox>
+        </StackPane>
+    </HBox>
+
+    <VBox HBox.hgrow="ALWAYS" styleClass="right-panel" prefHeight="620">
+        <padding><Insets top="0" right="64" bottom="0" left="64"/></padding>
+
+        <Pane VBox.vgrow="ALWAYS"/>
+
+        <VBox fx:id="formContainer" spacing="14" maxWidth="440">
+
+            <VBox spacing="6">
+                <Label text="Create Account" styleClass="form-title"/>
+                <Label text="Sign up with your Gmail to get started" styleClass="form-sub"/>
+                <Rectangle width="40" height="3" fill="#818CF8" arcWidth="2" arcHeight="2"/>
+            </VBox>
+
+            <VBox spacing="6">
+                <Label text="ROLE" styleClass="field-label"/>
+                <HBox styleClass="toggle-wrap" spacing="0">
+                    <ToggleButton fx:id="userToggle" text="User"
+                                  toggleGroup="$roleGroup" selected="true"
+                                  styleClass="role-btn role-btn-user"
+                                  HBox.hgrow="ALWAYS" maxWidth="Infinity"
+                                  prefHeight="40"/>
+                    <ToggleButton fx:id="adminToggle" text="Admin"
+                                  toggleGroup="$roleGroup"
+                                  styleClass="role-btn role-btn-admin"
+                                  HBox.hgrow="ALWAYS" maxWidth="Infinity"
+                                  prefHeight="40"/>
+                </HBox>
+            </VBox>
+
+            <StackPane maxWidth="440" minHeight="34" maxHeight="34">
+                <Label fx:id="errorLabel" text="" visible="false"
+                       wrapText="false" maxWidth="440"
+                       styleClass="message-label msg-error"
+                       StackPane.alignment="CENTER_LEFT"/>
+            </StackPane>
+
+            <VBox spacing="6">
+                <Label text="GMAIL" styleClass="field-label"/>
+                <TextField fx:id="emailField" promptText="you@gmail.com"
+                           styleClass="input-field" maxWidth="440"/>
+            </VBox>
+
+            <VBox spacing="6">
+                <Label text="DATE OF BIRTH" styleClass="field-label"/>
+                <DatePicker fx:id="dobPicker" styleClass="date-picker"
+                            maxWidth="440" prefHeight="44"/>
+            </VBox>
+
+            <HBox spacing="14">
+                <VBox spacing="6" HBox.hgrow="ALWAYS">
+                    <Label text="PASSWORD" styleClass="field-label"/>
+                    <StackPane HBox.hgrow="ALWAYS">
+                        <PasswordField fx:id="passwordField" promptText="Min. 6 chars"
+                                       styleClass="input-field" maxWidth="Infinity"/>
+                        <TextField fx:id="passwordVisible" promptText="Min. 6 chars"
+                                   styleClass="input-field" visible="false" managed="false"
+                                   maxWidth="Infinity"/>
+                        <Button fx:id="eyeBtn" text="👁" onAction="#togglePasswordVisibility"
+                                styleClass="eye-btn" StackPane.alignment="CENTER_RIGHT"/>
+                    </StackPane>
+                </VBox>
+                <VBox spacing="6" HBox.hgrow="ALWAYS">
+                    <Label text="CONFIRM" styleClass="field-label"/>
+                    <StackPane HBox.hgrow="ALWAYS">
+                        <PasswordField fx:id="confirmPasswordField" promptText="Re-enter"
+                                       styleClass="input-field" maxWidth="Infinity"/>
+                        <TextField fx:id="confirmPasswordVisible" promptText="Re-enter"
+                                   styleClass="input-field" visible="false" managed="false"
+                                   maxWidth="Infinity"/>
+                        <Button fx:id="eyeBtnConfirm" text="👁" onAction="#toggleConfirmVisibility"
+                                styleClass="eye-btn" StackPane.alignment="CENTER_RIGHT"/>
+                    </StackPane>
+                </VBox>
+            </HBox>
+
+            <Button fx:id="registerButton" text="Create Account" onAction="#handleRegister"
+                    styleClass="btn-primary" maxWidth="440" prefHeight="46"/>
+
+            <HBox alignment="CENTER" spacing="10">
+                <Separator HBox.hgrow="ALWAYS" styleClass="divider-line"/>
+                <Label text="or" styleClass="divider-text"/>
+                <Separator HBox.hgrow="ALWAYS" styleClass="divider-line"/>
+            </HBox>
+
+            <HBox alignment="CENTER" spacing="5">
+                <Label text="Already have an account?" styleClass="link-prompt"/>
+                <Hyperlink text="Sign In →" onAction="#goToLogin" styleClass="link-action"/>
+            </HBox>
+
+        </VBox>
+
+        <Pane VBox.vgrow="ALWAYS"/>
+    </VBox>
+</HBox>
