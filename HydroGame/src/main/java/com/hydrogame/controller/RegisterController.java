@@ -16,6 +16,7 @@ import java.util.ResourceBundle;
 
 public class RegisterController implements Initializable {
 
+    @FXML private TextField     usernameField;
     @FXML private TextField     emailField;
     @FXML private DatePicker    dobPicker;
     @FXML private PasswordField passwordField;
@@ -37,6 +38,9 @@ public class RegisterController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         passwordVisible.textProperty().bindBidirectional(passwordField.textProperty());
         confirmPasswordVisible.textProperty().bindBidirectional(confirmPasswordField.textProperty());
+
+        dobPicker.setPromptText("MM/DD/YYYY");
+        dobPicker.getEditor().setPromptText("MM/DD/YYYY");
 
         userToggle.selectedProperty().addListener((obs, was, isNow) -> {
             if (isNow) adminToggle.setSelected(false);
@@ -68,13 +72,18 @@ public class RegisterController implements Initializable {
 
     @FXML
     private void handleRegister() {
+        String    username = usernameField.getText().trim();
         String    email    = emailField.getText().trim();
         LocalDate dob      = dobPicker.getValue();
         String    password = passwordField.getText();
         String    confirm  = confirmPasswordField.getText();
 
-        if (email.isEmpty() || dob == null || password.isEmpty() || confirm.isEmpty()) {
+        if (username.isEmpty() || email.isEmpty() || dob == null
+                || password.isEmpty() || confirm.isEmpty()) {
             showError("Please fill in all required fields."); return;
+        }
+        if (username.length() < 4 || !username.matches("^[A-Za-z0-9_]+$")) {
+            showError("Username: min 4 chars, letters/numbers/underscore only."); return;
         }
         if (!email.matches("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$")) {
             showError("Invalid email address format."); return;

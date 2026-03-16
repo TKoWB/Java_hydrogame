@@ -85,7 +85,7 @@
                 </VBox>
 
                 <Pane VBox.vgrow="ALWAYS"/>
-                <Label text="v1.0  ·  HydroGames 2026" styleClass="version-text"/>
+                <Label text="v2.0  ·  HydroGames 2026" styleClass="version-text"/>
             </VBox>
         </StackPane>
     </HBox>
@@ -95,7 +95,7 @@
 
         <Pane VBox.vgrow="ALWAYS"/>
 
-        <VBox fx:id="formContainer" spacing="14" maxWidth="440">
+        <VBox fx:id="formContainer" spacing="13" maxWidth="440">
 
             <VBox spacing="6">
                 <Label text="Create Account" styleClass="form-title"/>
@@ -110,12 +110,12 @@
                                   toggleGroup="$roleGroup" selected="true"
                                   styleClass="role-btn role-btn-user"
                                   HBox.hgrow="ALWAYS" maxWidth="Infinity"
-                                  prefHeight="40"/>
+                                  prefHeight="38"/>
                     <ToggleButton fx:id="adminToggle" text="Admin"
                                   toggleGroup="$roleGroup"
                                   styleClass="role-btn role-btn-admin"
                                   HBox.hgrow="ALWAYS" maxWidth="Infinity"
-                                  prefHeight="40"/>
+                                  prefHeight="38"/>
                 </HBox>
             </VBox>
 
@@ -126,16 +126,23 @@
                        StackPane.alignment="CENTER_LEFT"/>
             </StackPane>
 
+            <HBox spacing="14">
+                <VBox spacing="6" HBox.hgrow="ALWAYS">
+                    <Label text="USERNAME" styleClass="field-label"/>
+                    <TextField fx:id="usernameField" promptText="gamer_x99"
+                               styleClass="input-field" maxWidth="Infinity"/>
+                </VBox>
+                <VBox spacing="6" HBox.hgrow="ALWAYS">
+                    <Label text="DATE OF BIRTH" styleClass="field-label"/>
+                    <DatePicker fx:id="dobPicker" styleClass="date-picker"
+                                maxWidth="Infinity" prefHeight="44"/>
+                </VBox>
+            </HBox>
+
             <VBox spacing="6">
                 <Label text="GMAIL" styleClass="field-label"/>
                 <TextField fx:id="emailField" promptText="you@gmail.com"
                            styleClass="input-field" maxWidth="440"/>
-            </VBox>
-
-            <VBox spacing="6">
-                <Label text="DATE OF BIRTH" styleClass="field-label"/>
-                <DatePicker fx:id="dobPicker" styleClass="date-picker"
-                            maxWidth="440" prefHeight="44"/>
             </VBox>
 
             <HBox spacing="14">
@@ -166,7 +173,7 @@
             </HBox>
 
             <Button fx:id="registerButton" text="Create Account" onAction="#handleRegister"
-                    styleClass="btn-primary" maxWidth="440" prefHeight="46"/>
+                    styleClass="btn-primary" maxWidth="440" prefHeight="44"/>
 
             <HBox alignment="CENTER" spacing="10">
                 <Separator HBox.hgrow="ALWAYS" styleClass="divider-line"/>
