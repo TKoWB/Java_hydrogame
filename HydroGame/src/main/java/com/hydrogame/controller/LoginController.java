@@ -1,5 +1,7 @@
 package com.hydrogame.controller;
 
+import java.util.List;
+import java.util.ArrayList;
 import javafx.animation.*;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -12,8 +14,11 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 import java.net.URL;
 import java.util.ResourceBundle;
+import com.hydrogame.user_service.LoginService;
 
 public class LoginController implements Initializable {
+    LoginService L = new LoginService();
+    List<Object> list = new ArrayList<>();
 
     @FXML private TextField     emailField;
     @FXML private PasswordField passwordField;
@@ -59,16 +64,23 @@ public class LoginController implements Initializable {
         String email    = emailField.getText().trim();
         String password = passwordField.getText();
 
-        if (email.isEmpty() || password.isEmpty()) {
-            showError("Please fill in all required fields."); return;
-        }
-        if (!email.matches("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$")) {
-            showError("Invalid email address format."); return;
-        }
-        if (password.length() < 6) {
-            showError("Password must be at least 6 characters."); return;
-        }
+                    
+//            if (email.isEmpty() || password.isEmpty()) {
+//                showError("Please fill in all required fields."); return;
+//            }
+//            if (!email.matches("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$")) {
+//                showError("Invalid email address format."); return;
+//            }   
+//            if (password.length() < 6) {
+//                showError("Password must be at least 6 characters."); return;
+//            }
 
+        
+        list = L.Login(email, password);
+        if(!L.getCheck()){
+            showError("Incorrect login information");
+        }
+        
         ScaleTransition st = new ScaleTransition(Duration.millis(90), loginButton);
         st.setToX(0.95); st.setToY(0.95);
         st.setAutoReverse(true); st.setCycleCount(2);

@@ -13,8 +13,10 @@ import javafx.util.Duration;
 import java.net.URL;
 import java.time.LocalDate;
 import java.util.ResourceBundle;
+import com.hydrogame.user_service.RegisterService;
 
 public class RegisterController implements Initializable {
+    RegisterService R = new RegisterService();
 
     @FXML private TextField     usernameField;
     @FXML private TextField     emailField;
@@ -97,7 +99,9 @@ public class RegisterController implements Initializable {
         if (!password.equals(confirm)) {
             showError("Passwords do not match."); return;
         }
-
+        
+        R.Register(email, username, dob, password);
+        
         ScaleTransition st = new ScaleTransition(Duration.millis(90), registerButton);
         st.setToX(0.95); st.setToY(0.95);
         st.setAutoReverse(true); st.setCycleCount(2);
