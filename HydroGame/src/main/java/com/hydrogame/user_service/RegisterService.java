@@ -4,13 +4,15 @@
  */
 package com.hydrogame.user_service;
 import java.time.LocalDate;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import org.hibernate.Session;
 import org.hibernate.Transaction;
-import com.hydrogame.hibernate_util.HibernateUtil;
+
 import com.hydrogame.database.User;
+import com.hydrogame.hibernate_util.HibernateUtil;
 import com.hydrogame.security_service.EncryptionService;
-import java.util.regex.Pattern;
-import java.util.regex.Matcher;
 
 
 /**

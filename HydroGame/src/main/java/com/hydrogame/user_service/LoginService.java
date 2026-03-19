@@ -3,14 +3,16 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Other/File.java to edit this template
  */
 package com.hydrogame.user_service;
-import java.util.List;
 import java.util.ArrayList;
-import java.util.regex.Pattern;
+import java.util.List;
 import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import org.hibernate.Session;
-import com.hydrogame.security_service.DecryptionService;
-import com.hydrogame.hibernate_util.HibernateUtil;
+
 import com.hydrogame.database.User;
+import com.hydrogame.hibernate_util.HibernateUtil;
+import com.hydrogame.security_service.DecryptionService;
 
 /**
  *
@@ -18,6 +20,7 @@ import com.hydrogame.database.User;
  */
 public class LoginService {
     DecryptionService D = new DecryptionService();
+    private boolean C = false;
     
     //check email
     private static final String EMAIL_PATTERN = 
@@ -31,7 +34,8 @@ public class LoginService {
         return matcher.matches();
     }    
     
-
+    public boolean getCheck() {return C;}
+    public void setCheck(boolean a) {this.C = a;}
     
     public List<Object> Login(String logintext, String password ){
         List<Object> Result = new ArrayList<>();
@@ -53,13 +57,15 @@ public class LoginService {
                 Result.add(u.getUid());
                 Result.add(u.getUsername());
                 Result.add(u.getBalance());
-                
+                setCheck(true);
+                System.out.println("Login success");
                 // tuổi thì sẽ dùng để vali mấy thứ cần độ tuổi, hoặc display lên cũng được
                 Result.add(u.getAge());
                 // email thì để đây, muốn làm gì thì làm
                 Result.add(u.getEmail());
                 
-            } else {System.out.println("Incorrect login information");}
+                
+            } else {System.out.println("Incorrect login information"); setCheck(false);}
             
             
         } catch (NullPointerException e){

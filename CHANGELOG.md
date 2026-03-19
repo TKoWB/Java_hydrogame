@@ -1,6 +1,6 @@
 ## [0.1] - 08-03-2026
 
-### Added
+### 🚀 Added
 - **Khởi tạo dự án:** `hydrogame`
 - **Database:** Tích hợp file `hydrogame.sql`
 
@@ -33,14 +33,7 @@
 
 ---
 
-###  Lưu ý quan trọng (Notes)
+### 💡 Lưu ý quan trọng (Notes)
 - **Chức năng hiện tại:** Hầu hết các lớp trên chỉ đóng vai trò là tầng trung gian (Service/DAO) để giao tiếp với Database (lưu và lấy dữ liệu). 
 - **Chưa phải là chương trình hoàn thiện:** Các Service này không tự chạy độc lập. Bạn cần phải viết logic để truyền dữ liệu đầu vào cho chúng. 
 - **Trạng thái:** Tên file có thể gây hiểu lầm là đã xong, nhưng thực tế đây mới chỉ là phần khung giao tiếp Database, chưa hoàn thiện toàn bộ tính năng đâu`=v`
-
----
-
-## [0.2] - 14-03-2026
-
-### change
-- **đổi từ simple javaFX thành FXML javaFX** 
