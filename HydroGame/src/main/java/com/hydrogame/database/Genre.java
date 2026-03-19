@@ -7,12 +7,14 @@ package com.hydrogame.database;
 import javax.persistence.*;
 import java.util.Set;
 import java.util.HashSet;
+import com.hydrogame.database.Game;
 
 @Entity
 @Table(name = "genre")
 public class Genre {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "genre_id")
     private int genreId;
 

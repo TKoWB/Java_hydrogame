@@ -3,6 +3,7 @@ package com.hydrogame.controller;
 import java.util.List;
 import java.util.ArrayList;
 import javafx.animation.*;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -14,6 +15,7 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 import java.net.URL;
 import java.util.ResourceBundle;
+import com.hydrogame.main.ConsoleMenu;
 import com.hydrogame.user_service.LoginService;
 
 public class LoginController implements Initializable {
@@ -79,6 +81,13 @@ public class LoginController implements Initializable {
         list = L.Login(email, password);
         if(!L.getCheck()){
             showError("Incorrect login information");
+        } else {
+            // Login successful — close JavaFX and launch console menu
+            List<Object> userData = new ArrayList<>(list);
+            boolean isAdmin = adminToggle.isSelected();
+            new Thread(() -> new ConsoleMenu(userData, isAdmin).start()).start();
+            Platform.exit();
+            return;
         }
         
         ScaleTransition st = new ScaleTransition(Duration.millis(90), loginButton);
