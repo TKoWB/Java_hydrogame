@@ -10,7 +10,8 @@ CREATE TABLE IF NOT EXISTS users (
     birthday DATE NOT NULL,
     password VARCHAR(512) NOT NULL,
     age INT NULL,
-    balance decimal(15,2) default 0
+    balance decimal(15,2) default 0,
+    joindate DATE NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 DELIMITER //
