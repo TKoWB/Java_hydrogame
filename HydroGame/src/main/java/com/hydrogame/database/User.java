@@ -41,15 +41,26 @@ public class User {
     @Column(name = "balance", precision = 15, scale = 2)
     private BigDecimal balance = BigDecimal.ZERO;
 
+    @Column(name = "date_users_added", nullable = false)
+    private LocalDate date_user_added;
     
+    @Column(name = "ban_date", nullable = true)
+    private LocalDate ban_date;
+    
+    @Column(name = "role", nullable = false)
+    private boolean role;
     public User() {
     }
 
-    public User(String email, String username, LocalDate birthday, String password) {
+    public User(String email, String username, LocalDate birthday, String password, boolean role) {
         this.email = email;
         this.username = username;
         this.birthday = birthday;
         this.password = password;
+        this.date_user_added = LocalDate.now();
+        this.ban_date = null;
+        this.role = role;
+        
     }
     @ManyToMany
     @JoinTable(
@@ -76,9 +87,17 @@ public class User {
     public void setPassword(String password) { this.password = password; }
 
     public Integer getAge() { return age; }
-
+    public LocalDate getDateAdded() { return date_user_added; }
+    public boolean getRole() { return role; }
+    
+    public LocalDate getBandate() { return ban_date; }
+    public void setBandate(boolean role) { this.role = role; }
+    
     public BigDecimal getBalance() { return balance; }
     public void setBalance(BigDecimal balance) { this.balance = balance; }
+    
+    
+    
     @Override
     public String toString() {
         return "User{" +
@@ -88,6 +107,9 @@ public class User {
                 ", birthday=" + birthday +
                 ", age=" + age +
                 ", balance=" + balance +
+                ", date join=" + date_user_added +
+                ", date ban=" + ban_date +
+                ", role=" + role +
                 '}';
     }
 }

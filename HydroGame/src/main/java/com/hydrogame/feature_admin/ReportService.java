@@ -29,7 +29,9 @@ public class ReportService {
             System.out.println("Birthday : " + user.getBirthday());
             System.out.println("Age      : " + user.getAge());
             System.out.println("Balance  : " + user.getBalance());
-
+            System.out.println("date join: " + user.getDateAdded());
+            System.out.println("ban date : " + user.getBandate());
+            System.out.println("role     : " + user.getRole());
             // Games bought (were in cart — already purchased, cart cleared on checkout)
             // We show current cart items as "games in cart"
             List<Game> cartGames = session.createNativeQuery(
@@ -139,6 +141,8 @@ public class ReportService {
             System.out.println("Released   : " + game.getReleaseDate());
             System.out.println("Stock      : " + game.getStock());
             System.out.println("Image URL  : " + game.getImgUrl());
+            System.out.println("date add   : " + game.getDescription());
+            System.out.println("added by   : " + game.getUser());
 
             // Genres
             @SuppressWarnings("unchecked")

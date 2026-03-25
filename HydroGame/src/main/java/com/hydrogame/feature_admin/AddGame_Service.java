@@ -17,7 +17,7 @@ import com.hydrogame.hibernate_util.HibernateUtil;
  */
 public class AddGame_Service {
 
-    public void addGame(String title, String description, BigDecimal price, int agecap, LocalDate releasedate, int stock, String imgurl) {
+    public void addGame(String title, String description, BigDecimal price, int agecap, LocalDate releasedate, int stock, String imgurl, String username) {
         
         boolean isValidAge = (agecap == 3 || agecap == 7 || agecap == 12 || agecap == 16 || agecap == 18);
         
@@ -30,12 +30,12 @@ public class AddGame_Service {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             transaction = session.beginTransaction();
 
-            Game game = new Game(title, description, price, agecap, releasedate, stock, imgurl);
+            Game game = new Game(title, description, price, agecap, releasedate, stock, imgurl, username);
             
             session.persist(game); 
 
             transaction.commit();
-            System.out.println("Thêm game thành công: " + title);
+            System.out.println("Add game succesfully: " + title);
 
         } catch (Exception e) {
             if (transaction != null && transaction.getStatus().canRollback()) {

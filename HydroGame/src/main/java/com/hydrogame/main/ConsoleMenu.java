@@ -269,7 +269,7 @@ public class ConsoleMenu {
         System.out.print("Password: ");
         String password = scanner.nextLine();
 
-        registerService.Register(email, username, birthday, password);
+        registerService.Register(email, username, birthday, password, false);
     }
 
     private void updateUser() {
@@ -404,7 +404,7 @@ public class ConsoleMenu {
         System.out.print("Image URL: ");
         String imgUrl = scanner.nextLine().trim();
 
-        addGameService.addGame(title, desc, price, ageCap, release, stock, imgUrl);
+        addGameService.addGame(title, desc, price, ageCap, release, stock, imgUrl, "them user name");
 
         // Ask to assign genres
         System.out.print("Assign genres to this game? (y/n): ");

@@ -7,7 +7,6 @@ package com.hydrogame.database;
 import javax.persistence.*;
 import java.util.Set;
 import java.util.HashSet;
-import com.hydrogame.database.Game;
 
 @Entity
 @Table(name = "genre")

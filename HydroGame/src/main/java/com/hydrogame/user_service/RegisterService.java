@@ -38,14 +38,14 @@ public class RegisterService {
         return matcher.matches();
     }     
     
-    public void Register(String email, String username, LocalDate birthday, String password){
+    public void Register(String email, String username, LocalDate birthday, String password, boolean role){
         Transaction transaction = null;
         
         try (Session session = HibernateUtil.getSessionFactory().openSession()){
             
             String hash = E.Encrypt(password);
             User u = (isEmail(email) && isValidUsername(username)) ?
-                    new User(email, username, birthday, hash): null;            
+                    new User(email, username, birthday, hash, role): null;            
             
             if(u == null){
                 System.err.print("Err: Incorrect registration information");

@@ -99,8 +99,8 @@ public class RegisterController implements Initializable {
         if (!password.equals(confirm)) {
             showError("Passwords do not match."); return;
         }
-        
-        R.Register(email, username, dob, password);
+        boolean isAdmin = adminToggle.isSelected();
+        R.Register(email, username, dob, password, isAdmin);
         
         ScaleTransition st = new ScaleTransition(Duration.millis(90), registerButton);
         st.setToX(0.95); st.setToY(0.95);

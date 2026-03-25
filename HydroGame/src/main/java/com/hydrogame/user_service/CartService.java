@@ -15,7 +15,7 @@ public class CartService {
     public List<Game> getCartItems(int uid) {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             List<Game> games = session.createNativeQuery(
-                    "SELECT g.* FROM game g JOIN cart c ON g.game_id = c.game_id WHERE c.uid = :uid", Game.class)
+                    "SELECT g.title, g.price, c.amount FROM cart_item c JOIN game g ON c.game_id = g.game_id WHERE c.uid = :uid", Game.class)
                     .setParameter("uid", uid)
                     .list();
             return games;

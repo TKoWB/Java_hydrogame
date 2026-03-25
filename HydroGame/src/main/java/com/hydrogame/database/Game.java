@@ -5,18 +5,13 @@
 package com.hydrogame.database;
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
 @Entity
@@ -46,13 +41,26 @@ public class Game {
     @Column(name = "stock")
     private int stock = 0;
 
-    @Column(name = "img_url", length = 1000)
+    @Column(name = "img_url", length = 10000)
     private String imgUrl;
+    
+    @Column(name = "instore", nullable = false)
+    private int instore;
+    
+    @Column(name = "date_game_addad", nullable = false)
+    private LocalDate date_game_added;
+    
+    @Column(name = "date_game_deleted", nullable = true)
+    private LocalDate date_game_deleted;
+    
+    @Column(name = "username", nullable = false)
+    private String username;
+    
     
     //construc
     public Game() {}
 
-    public Game(String title, String description, BigDecimal price, int ageCap, LocalDate releaseDate, int stock, String imgUrl) {
+    public Game(String title, String description, BigDecimal price, int ageCap, LocalDate releaseDate, int stock, String imgUrl, String username) {
         this.title = title;
         this.description = description;
         this.price = price;
@@ -60,15 +68,11 @@ public class Game {
         this.releaseDate = releaseDate;
         this.stock = stock;
         this.imgUrl = imgUrl;
+        this.instore = 0;
+        this.date_game_added = LocalDate.now();
+        this.date_game_deleted = null;
+        this.username = username;
     }
-
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(
-            name = "link_genre",
-            joinColumns = @JoinColumn(name = "game_id"),
-            inverseJoinColumns = @JoinColumn(name = "genre_id")
-    )
-    private Set<Genre> genres = new HashSet<>();
     
     //get set
     public int getGameId() { return gameId; }
@@ -94,10 +98,17 @@ public class Game {
 
     public String getImgUrl() { return imgUrl; }
     public void setImgUrl(String imgUrl) { this.imgUrl = imgUrl; }
-
-    public Set<Genre> getGenres() { return genres; }
-    public void setGenres(Set<Genre> genres) { this.genres = genres; }
-
+    
+    public int getInStore() { return instore; }
+    public void setInStore(int instore) { this.instore = instore; }    
+    
+    public LocalDate getDateAdded() { return date_game_added; }
+    
+    public LocalDate getDateDel() { return date_game_deleted; }
+    public void setDateDel(LocalDate del) { this.date_game_deleted = del; }
+    
+    public String getUser() { return username; }
+    
     //to string
     @Override
     public String toString() {
