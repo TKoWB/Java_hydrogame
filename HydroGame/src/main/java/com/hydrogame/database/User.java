@@ -41,7 +41,7 @@ public class User {
     @Column(name = "balance", precision = 15, scale = 2)
     private BigDecimal balance = BigDecimal.ZERO;
 
-    @Column(name = "date_users_added", nullable = false)
+    @Column(name = "date_user_added", nullable = false)
     private LocalDate date_user_added;
     
     @Column(name = "ban_date", nullable = true)
@@ -64,11 +64,10 @@ public class User {
     }
     @ManyToMany
     @JoinTable(
-            name = "cart",
+            name = "cart_item",
             joinColumns = @JoinColumn(name = "uid"),
             inverseJoinColumns = @JoinColumn(name = "game_id")
     )
-    
     private Set<Game> games = new HashSet<>();
     
     public int getUid() { return uid; }

@@ -17,6 +17,7 @@ import java.net.URL;
 import java.util.ResourceBundle;
 import com.hydrogame.main.ConsoleMenu;
 import com.hydrogame.user_service.LoginService;
+import com.giaodienUI.GameProductManagementUI;
 
 public class LoginController implements Initializable {
     LoginService L = new LoginService();
@@ -82,11 +83,26 @@ public class LoginController implements Initializable {
         if(!L.getCheck()){
             showError("Incorrect login information");
         } else {
-            // Login successful — close JavaFX and launch console menu
             List<Object> userData = new ArrayList<>(list);
             boolean isAdmin = adminToggle.isSelected();
-            new Thread(() -> new ConsoleMenu(userData, isAdmin).start()).start();
-            Platform.exit();
+            if (isAdmin) {
+                // Admin login — open the JavaFX admin dashboard
+                try {
+                    Stage adminStage = new Stage();
+                    GameProductManagementUI adminUI = new GameProductManagementUI();
+                    String username = userData.size() > 1 ? String.valueOf(userData.get(1)) : "";
+                    adminUI.setLoggedInUsername(username);
+                    adminUI.start(adminStage);
+                    Stage currentStage = (Stage) emailField.getScene().getWindow();
+                    currentStage.close();
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+            } else {
+                // User login — launch console menu
+                new Thread(() -> new ConsoleMenu(userData, false).start()).start();
+                Platform.exit();
+            }
             return;
         }
         

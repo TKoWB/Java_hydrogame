@@ -45,7 +45,7 @@ public class GenreCrudService {
         }
     }
 
-    public void addGenreToGame(int gameId, int genreId) {
+    public void addGenreToGame(int gameId, int genreId) { //add them list genre de chon tat ca genre de cho vao game!!!!
         Transaction transaction = null;
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             // Check if already linked

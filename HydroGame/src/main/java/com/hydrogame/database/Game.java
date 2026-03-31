@@ -7,11 +7,18 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Set;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
 @Entity
@@ -55,8 +62,16 @@ public class Game {
     
     @Column(name = "username", nullable = false)
     private String username;
-    
-    
+
+    /** Owning side of the many-to-many with Genre via link_genre table */
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+        name = "link_genre",
+        joinColumns = @JoinColumn(name = "game_id"),
+        inverseJoinColumns = @JoinColumn(name = "genre_id")
+    )
+    private Set<Genre> genres = new HashSet<>();
+
     //construc
     public Game() {}
 
@@ -108,7 +123,10 @@ public class Game {
     public void setDateDel(LocalDate del) { this.date_game_deleted = del; }
     
     public String getUser() { return username; }
-    
+
+    public Set<Genre> getGenres() { return genres; }
+    public void setGenres(Set<Genre> genres) { this.genres = genres; }
+
     //to string
     @Override
     public String toString() {

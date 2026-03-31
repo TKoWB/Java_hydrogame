@@ -340,3 +340,27 @@
     -fx-text-fill: #94A3B8;
     -fx-line-spacing: 4;
 }
+
+/* Dark-themed TextArea for admin UI */
+.dark-text-area {
+    -fx-background-color: transparent;
+    -fx-text-fill: white;
+    -fx-prompt-text-fill: #92a8cb;
+    -fx-padding: 0;
+}
+.dark-text-area .scroll-pane {
+    -fx-background-color: transparent;
+    -fx-background-insets: 0;
+    -fx-padding: 0;
+}
+.dark-text-area .scroll-pane .viewport {
+    -fx-background-color: #162032;
+}
+.dark-text-area .content {
+    -fx-background-color: #162032;
+    -fx-background-radius: 14;
+    -fx-padding: 8;
+}
+.dark-text-area:focused {
+    -fx-background-color: transparent;
+}
