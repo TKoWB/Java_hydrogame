@@ -441,30 +441,69 @@ public class GameProductManagementUI extends Application {
         chart.setPrefHeight(320);
         chart.setStyle("-fx-background-color: transparent;");
 
-        // Helper to load chart data
+        // Date picker shown when "Day" is selected — no default value so rolling data loads first
+        javafx.scene.control.DatePicker datePicker = new javafx.scene.control.DatePicker();
+        datePicker.setPromptText("Pick month to filter");
+        datePicker.setStyle(inputStyle());
+        datePicker.setVisible(false);
+        datePicker.setManaged(false);
+
+        // Year picker shown when "Month" is selected — no default so rolling data loads first
+        ComboBox<Integer> yearPicker = new ComboBox<>();
+        int nowYear = LocalDate.now().getYear();
+        for (int y = nowYear; y >= nowYear - 9; y--) yearPicker.getItems().add(y);
+        yearPicker.setPromptText("Pick year to filter");
+        yearPicker.setValue(null);
+        yearPicker.setStyle(comboStyle());
+        yearPicker.setVisible(false);
+        yearPicker.setManaged(false);
+
+        HBox pickerRow = new HBox(10, datePicker, yearPicker);
+        pickerRow.setAlignment(Pos.CENTER_LEFT);
+
+        // Helper to load chart data:
+        //   Day   + no date picked  → last 30 days (rolling)
+        //   Day   + date picked     → all days in that month
+        //   Month + no year picked  → last 12 months (rolling)
+        //   Month + year picked     → all months in that year
+        //   Year                    → last 5 years
         Runnable updateChart = () -> {
             chart.getData().clear();
             XYChart.Series<String, Number> s = new XYChart.Series<>();
-            if (filter.getValue().equals("Day")) {
-                java.util.Map<String, java.math.BigDecimal> map = com.hydrogame.database.RevenueService.getDailyRevenueForCurrentMonth();
-                for (String day : map.keySet()) {
-                    s.getData().add(new XYChart.Data<>(day, map.get(day)));
-                }
-            } else if (filter.getValue().equals("Month")) {
-                java.util.Map<String, java.math.BigDecimal> map = com.hydrogame.database.RevenueService.getMonthlyRevenueForCurrentYear();
-                for (String month : map.keySet()) {
-                    s.getData().add(new XYChart.Data<>(month, map.get(month)));
-                }
-            } else if (filter.getValue().equals("Year")) {
-                java.util.Map<String, java.math.BigDecimal> map = com.hydrogame.database.RevenueService.getYearlyRevenueForChart(5);
-                for (String year : map.keySet()) {
-                    s.getData().add(new XYChart.Data<>(year, map.get(year)));
-                }
+            if ("Day".equals(filter.getValue())) {
+                LocalDate picked = datePicker.getValue();
+                java.util.Map<String, java.math.BigDecimal> map = picked != null
+                    ? com.hydrogame.database.RevenueService.getDailyRevenueForMonth(picked.getYear(), picked.getMonthValue())
+                    : com.hydrogame.database.RevenueService.getDailyRevenueLastDays(30);
+                for (String k : map.keySet()) s.getData().add(new XYChart.Data<>(k, map.get(k)));
+            } else if ("Month".equals(filter.getValue())) {
+                Integer yr = yearPicker.getValue();
+                java.util.Map<String, java.math.BigDecimal> map = yr != null
+                    ? com.hydrogame.database.RevenueService.getMonthlyRevenueForYear(yr)
+                    : com.hydrogame.database.RevenueService.getMonthlyRevenueLastMonths(12);
+                for (String k : map.keySet()) s.getData().add(new XYChart.Data<>(k, map.get(k)));
+            } else {
+                java.util.Map<String, java.math.BigDecimal> map =
+                    com.hydrogame.database.RevenueService.getYearlyRevenueForChart(5);
+                for (String yr : map.keySet()) s.getData().add(new XYChart.Data<>(yr, map.get(yr)));
             }
             chart.getData().add(s);
         };
         updateChart.run();
-        filter.setOnAction(e -> updateChart.run());
+        filter.setOnAction(e -> {
+            boolean isDay = "Day".equals(filter.getValue());
+            boolean isMo  = "Month".equals(filter.getValue());
+            // Reset pickers so rolling data shows when switching filters
+            datePicker.setValue(null);
+            yearPicker.setValue(null);
+            datePicker.setVisible(isDay);
+            datePicker.setManaged(isDay);
+            yearPicker.setVisible(isMo);
+            yearPicker.setManaged(isMo);
+            updateChart.run();
+        });
+        datePicker.setOnAction(e -> updateChart.run());
+        yearPicker.setOnAction(e -> updateChart.run());
 
         VBox chartCard = new VBox(14);
         chartCard.setPadding(new Insets(20));
@@ -473,6 +512,7 @@ public class GameProductManagementUI extends Application {
                 createSectionTitle("Revenue Statistics"),
                 createSubTitle("View revenue by day, month, or year"),
                 filter,
+                pickerRow,
                 chart
         );
 
@@ -647,9 +687,24 @@ public class GameProductManagementUI extends Application {
                     Game saved = productController.addGame(
                             fName, fDesc, new BigDecimal(fPrice),
                             18, LocalDate.now(), fStock, "/images/LOGO.png", loggedInUsername);
+                    if (saved != null && fCat != null && !fCat.isBlank()) {
+                        productController.setGenresForGame(saved.getGameId(), List.of(fCat));
+                        Game withGenres = productController.getGameById(saved.getGameId());
+                        if (withGenres != null) {
+                            final Game finalSaved = withGenres;
+                            Platform.runLater(() -> {
+                                productList.add(gameToRow(finalSaved));
+                                if (productTable != null) productTable.refresh();
+                                refreshDynamicSections();
+                                showInfo("Added successfully!");
+                            });
+                            return;
+                        }
+                    }
+                    final Game finalSaved = saved;
                     Platform.runLater(() -> {
-                        if (saved != null) {
-                            ProductRow row = gameToRow(saved);
+                        if (finalSaved != null) {
+                            ProductRow row = gameToRow(finalSaved);
                             productList.add(row);
                         }
                         if (productTable != null) productTable.refresh();
@@ -1361,9 +1416,14 @@ public class GameProductManagementUI extends Application {
         chart.setStyle("-fx-background-color: transparent;");
 
         // Compute stock per genre from the loaded productList
+        // A row's category can be "Action, RPG" (multi-genre) — split each one
         java.util.Map<String, Integer> stockByGenre = new java.util.LinkedHashMap<>();
         for (ProductRow row : productList) {
-            stockByGenre.merge(row.getCategory(), row.getStock(), Integer::sum);
+            if (row.getCategory() == null || row.getCategory().isBlank()) continue;
+            for (String genre : row.getCategory().split(",")) {
+                String g = genre.trim();
+                if (!g.isEmpty()) stockByGenre.merge(g, row.getStock(), Integer::sum);
+            }
         }
 
         XYChart.Series<String, Number> series = new XYChart.Series<>();
@@ -1635,6 +1695,7 @@ public class GameProductManagementUI extends Application {
         BigDecimal price   = new BigDecimal(txtPrice.getText().trim());
         int        stock   = Integer.parseInt(txtStock.getText().trim());
         String     imgUrl  = "/images/LOGO.png"; // default; extend form to collect from user
+        List<String> categories = new ArrayList<>(selectedCategories);
 
         // Run DB write on a background thread so the UI stays responsive
         Thread t = new Thread(() -> {
@@ -1643,12 +1704,29 @@ public class GameProductManagementUI extends Application {
                     18, LocalDate.now(),   // default ageCap — extend the form to collect this
                     stock, imgUrl, loggedInUsername
             );
+            if (saved != null && !categories.isEmpty()) {
+                productController.setGenresForGame(saved.getGameId(), categories);
+                Game withGenres = productController.getGameById(saved.getGameId());
+                if (withGenres != null) {
+                    final Game finalSaved = withGenres;
+                    Platform.runLater(() -> {
+                        ProductRow row = gameToRow(finalSaved);
+                        productList.add(row);
+                        if (productTable != null) productTable.refresh();
+                        refreshDynamicSections();
+                        clearForm();
+                        showInfo("Added successfully!");
+                    });
+                    return;
+                }
+            }
+            final Game finalSaved = saved;
             Platform.runLater(() -> {
-                if (saved == null) {
+                if (finalSaved == null) {
                     showWarning("Failed to save game to database. Check the console for details.");
                     return;
                 }
-                ProductRow row = gameToRow(saved);
+                ProductRow row = gameToRow(finalSaved);
                 productList.add(row);
                 if (productTable != null) productTable.refresh();
                 refreshDynamicSections();
@@ -1692,11 +1770,16 @@ public class GameProductManagementUI extends Application {
         if (productTable != null) productTable.refresh();
         refreshDynamicSections();
 
+        final List<String> categories = new ArrayList<>(selectedCategories);
+
         // Persist to DB in background
         Thread t = new Thread(() -> {
             boolean ok = productController.updateGame(
                     gameId, title, desc, price,
                     18, LocalDate.now(), stock, selected.getImagePath());
+            if (ok && !categories.isEmpty()) {
+                productController.setGenresForGame(gameId, categories);
+            }
             Platform.runLater(() -> {
                 if (ok) showInfo("Product updated successfully.");
                 else    showWarning("UI updated but failed to persist to database.");
@@ -1832,7 +1915,9 @@ public class GameProductManagementUI extends Application {
         // Derive display category from genres
         String category = "Unknown";
         if (g.getGenres() != null && !g.getGenres().isEmpty()) {
-            category = g.getGenres().iterator().next().getGenreName();
+            category = g.getGenres().stream()
+                    .map(gr -> gr.getGenreName())
+                    .collect(java.util.stream.Collectors.joining(", "));
         }
         // Derive stock status
         int    stock  = g.getStock();

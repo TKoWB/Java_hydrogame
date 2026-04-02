@@ -6,8 +6,10 @@ import java.util.Collections;
 import java.util.List;
 
 import org.hibernate.Session;
+import org.hibernate.Transaction;
 
 import com.hydrogame.database.Game;
+import com.hydrogame.database.Genre;
 import com.hydrogame.feature_admin.AddGame_Service;
 import com.hydrogame.feature_admin.EditGame_Service;
 import com.hydrogame.feature_admin.GameCrudService;
@@ -221,7 +223,7 @@ public class ProductController {
             return session.createNativeQuery(
                     "SELECT DATE_FORMAT(g.date_game_addad, '%b %Y') AS month_label, " +
                     "SUM(g.price) AS total " +
-                    "FROM cart c " +
+                    "FROM cart_item c " +
                     "JOIN game g ON c.game_id = g.game_id " +
                     "GROUP BY YEAR(g.date_game_addad), MONTH(g.date_game_addad), month_label " +
                     "ORDER BY MIN(g.date_game_addad)")
@@ -229,6 +231,45 @@ public class ProductController {
         } catch (Exception e) {
             System.err.println("[ProductController] getMonthlyRevenue: " + e.getMessage());
             return Collections.emptyList();
+        }
+    }
+
+    /**
+     * Replaces all genre links for a game with the given genre names.
+     * Creates genres in the genre table if they do not already exist.
+     */
+    public void setGenresForGame(int gameId, List<String> genreNames) {
+        if (genreNames == null || genreNames.isEmpty()) return;
+        Transaction tx = null;
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            tx = session.beginTransaction();
+            // Clear existing genre links for this game
+            session.createNativeQuery("DELETE FROM link_genre WHERE game_id = :gid")
+                    .setParameter("gid", gameId)
+                    .executeUpdate();
+            for (String name : genreNames) {
+                if (name == null || name.isBlank()) continue;
+                // Find existing genre (case-insensitive)
+                Genre genre = session.createQuery(
+                        "FROM Genre g WHERE LOWER(g.genreName) = LOWER(:name)", Genre.class)
+                        .setParameter("name", name.trim())
+                        .uniqueResult();
+                if (genre == null) {
+                    genre = new Genre();
+                    genre.setGenreName(name.trim());
+                    session.persist(genre);
+                    session.flush(); // so genreId is generated before the INSERT below
+                }
+                session.createNativeQuery(
+                        "INSERT INTO link_genre (game_id, genre_id) VALUES (:gid, :genId)")
+                        .setParameter("gid", gameId)
+                        .setParameter("genId", genre.getGenreId())
+                        .executeUpdate();
+            }
+            tx.commit();
+        } catch (Exception e) {
+            if (tx != null && tx.getStatus().canRollback()) tx.rollback();
+            System.err.println("[ProductController] setGenresForGame: " + e.getMessage());
         }
     }
 }

@@ -15,7 +15,7 @@ public class CartService {
     public List<Game> getCartItems(int uid) {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             List<Game> games = session.createNativeQuery(
-                    "SELECT g.title, g.price, c.amount FROM cart_item c JOIN game g ON c.game_id = g.game_id WHERE c.uid = :uid", Game.class)
+                    "SELECT g.* FROM cart_item c JOIN game g ON c.game_id = g.game_id WHERE c.uid = :uid", Game.class)
                     .setParameter("uid", uid)
                     .list();
             return games;
@@ -30,7 +30,7 @@ public class CartService {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             // Check if already in cart
             Long count = ((Number) session.createNativeQuery(
-                    "SELECT COUNT(*) FROM cart WHERE uid = :uid AND game_id = :gid")
+                    "SELECT COUNT(*) FROM cart_item WHERE uid = :uid AND game_id = :gid")
                     .setParameter("uid", uid)
                     .setParameter("gid", gameId)
                     .uniqueResult()).longValue();
@@ -45,7 +45,7 @@ public class CartService {
                 return;
             }
             transaction = session.beginTransaction();
-            session.createNativeQuery("INSERT INTO cart (uid, game_id) VALUES (:uid, :gid)")
+            session.createNativeQuery("INSERT INTO cart_item (uid, game_id, amount) VALUES (:uid, :gid, 1)")
                     .setParameter("uid", uid)
                     .setParameter("gid", gameId)
                     .executeUpdate();
@@ -63,7 +63,7 @@ public class CartService {
         Transaction transaction = null;
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             transaction = session.beginTransaction();
-            int rows = session.createNativeQuery("DELETE FROM cart WHERE uid = :uid AND game_id = :gid")
+            int rows = session.createNativeQuery("DELETE FROM cart_item WHERE uid = :uid AND game_id = :gid")
                     .setParameter("uid", uid)
                     .setParameter("gid", gameId)
                     .executeUpdate();
@@ -130,7 +130,7 @@ public class CartService {
             }
 
             // Clear cart
-            session.createNativeQuery("DELETE FROM cart WHERE uid = :uid")
+            session.createNativeQuery("DELETE FROM cart_item WHERE uid = :uid")
                     .setParameter("uid", uid)
                     .executeUpdate();
 

@@ -142,4 +142,85 @@ public class RevenueService {
             return map;
         }
     }
+
+    // Get revenue grouped by day for the last N days (rolling window — shown when no date is picked)
+    public static Map<String, BigDecimal> getDailyRevenueLastDays(int days) {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            LocalDateTime end = LocalDate.now().plusDays(1).atStartOfDay();
+            LocalDateTime start = LocalDate.now().minusDays(days - 1).atStartOfDay();
+            Query<Object[]> q = session.createQuery(
+                "SELECT YEAR(r.reciptDate), MONTH(r.reciptDate), DAY(r.reciptDate), COALESCE(SUM(r.totalPrice), 0) " +
+                "FROM Recipt r WHERE r.reciptDate >= :start AND r.reciptDate < :end " +
+                "GROUP BY YEAR(r.reciptDate), MONTH(r.reciptDate), DAY(r.reciptDate) " +
+                "ORDER BY YEAR(r.reciptDate), MONTH(r.reciptDate), DAY(r.reciptDate)",
+                Object[].class);
+            q.setParameter("start", start);
+            q.setParameter("end", end);
+            Map<String, BigDecimal> map = new java.util.LinkedHashMap<>();
+            for (Object[] row : q.list()) {
+                String label = String.format("%d/%02d/%02d", row[0], row[1], row[2]);
+                map.put(label, (BigDecimal) row[3]);
+            }
+            return map;
+        }
+    }
+
+    // Get revenue grouped by month for the last N months (rolling window — shown when no year is picked)
+    public static Map<String, BigDecimal> getMonthlyRevenueLastMonths(int months) {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            LocalDateTime end = YearMonth.now().plusMonths(1).atDay(1).atStartOfDay();
+            LocalDateTime start = YearMonth.now().minusMonths(months - 1).atDay(1).atStartOfDay();
+            Query<Object[]> q = session.createQuery(
+                "SELECT YEAR(r.reciptDate), MONTH(r.reciptDate), COALESCE(SUM(r.totalPrice), 0) " +
+                "FROM Recipt r WHERE r.reciptDate >= :start AND r.reciptDate < :end " +
+                "GROUP BY YEAR(r.reciptDate), MONTH(r.reciptDate) " +
+                "ORDER BY YEAR(r.reciptDate), MONTH(r.reciptDate)",
+                Object[].class);
+            q.setParameter("start", start);
+            q.setParameter("end", end);
+            Map<String, BigDecimal> map = new java.util.LinkedHashMap<>();
+            for (Object[] row : q.list()) {
+                String label = String.format("%d/%02d", row[0], row[1]);
+                map.put(label, (BigDecimal) row[2]);
+            }
+            return map;
+        }
+    }
+
+    // Get revenue grouped by day for a chosen year+month (for Day filter picker)
+    public static Map<String, BigDecimal> getDailyRevenueForMonth(int year, int month) {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            YearMonth ym = YearMonth.of(year, month);
+            LocalDateTime start = ym.atDay(1).atStartOfDay();
+            LocalDateTime end = ym.plusMonths(1).atDay(1).atStartOfDay();
+            Query<Object[]> q = session.createQuery(
+                "SELECT DAY(r.reciptDate), COALESCE(SUM(r.totalPrice), 0) " +
+                "FROM Recipt r WHERE r.reciptDate >= :start AND r.reciptDate < :end " +
+                "GROUP BY DAY(r.reciptDate) ORDER BY DAY(r.reciptDate)",
+                Object[].class);
+            q.setParameter("start", start);
+            q.setParameter("end", end);
+            Map<String, BigDecimal> map = new java.util.LinkedHashMap<>();
+            for (Object[] row : q.list()) map.put(String.format("%02d", row[0]), (BigDecimal) row[1]);
+            return map;
+        }
+    }
+
+    // Get revenue grouped by month for a chosen year (for Month filter picker)
+    public static Map<String, BigDecimal> getMonthlyRevenueForYear(int year) {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            LocalDateTime start = LocalDate.of(year, 1, 1).atStartOfDay();
+            LocalDateTime end = LocalDate.of(year + 1, 1, 1).atStartOfDay();
+            Query<Object[]> q = session.createQuery(
+                "SELECT MONTH(r.reciptDate), COALESCE(SUM(r.totalPrice), 0) " +
+                "FROM Recipt r WHERE r.reciptDate >= :start AND r.reciptDate < :end " +
+                "GROUP BY MONTH(r.reciptDate) ORDER BY MONTH(r.reciptDate)",
+                Object[].class);
+            q.setParameter("start", start);
+            q.setParameter("end", end);
+            Map<String, BigDecimal> map = new java.util.LinkedHashMap<>();
+            for (Object[] row : q.list()) map.put(String.format("%02d", row[0]), (BigDecimal) row[1]);
+            return map;
+        }
+    }
 }

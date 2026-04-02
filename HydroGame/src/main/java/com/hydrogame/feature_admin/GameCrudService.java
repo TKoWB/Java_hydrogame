@@ -33,7 +33,7 @@ public class GameCrudService {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             transaction = session.beginTransaction();
             // Clear junction table entries to avoid FK constraint violations
-            session.createNativeQuery("DELETE FROM cart WHERE game_id = :gid")
+            session.createNativeQuery("DELETE FROM cart_item WHERE game_id = :gid")
                    .setParameter("gid", gameId)
                    .executeUpdate();
             session.createNativeQuery("DELETE FROM link_genre WHERE game_id = :gid")
